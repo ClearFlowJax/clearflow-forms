@@ -297,14 +297,7 @@ canvas { display: block; touch-action: none; cursor: crosshair; background: whit
         <input type="text" id="dryer-model" placeholder="e.g. DVE45R6100C">
       </div>
     </div>
-    <div class="row2">
-      <div class="field"><label>Vent Location</label>
-        <select><option value="">Select…</option><option>Ground Floor</option><option>Second Floor</option><option>Roof</option><option>Side Wall</option></select>
-      </div>
-      <div class="field"><label>Access</label>
-        <select><option value="">Select…</option><option>Easy</option><option>Moderate</option><option>Difficult</option></select>
-      </div>
-    </div>
+
   </div>
 
   <!-- SERVICES -->
@@ -533,7 +526,7 @@ function emailReceipt(){
   if(!email){ alert('Please enter the customer email address first.'); return; }
   const sub=encodeURIComponent(`ClearFlow Receipt ${rcpt} – ${name.trim()||'Customer'}`);
   const body=encodeURIComponent(`Hi ${name.trim()||'there'},\n\nThank you for choosing ClearFlow! Please find your service receipt below.\n\nReceipt: ${rcpt}\nTotal: ${grand}\n\nWe appreciate your business!\n\nClearFlowJax Dryer Vent Cleaning\nJacksonville, FL\nclearflowjax.com`);
-  window.location.href=`mailto:${email}?subject=${sub}&body=${body}`;
+  window.location.href=`mailto:${email}?cc=clearflowjax%40outlook.com&subject=${sub}&body=${body}`;
 }
 // ── INIT ──────────────────────────────────────────
 buildRows();

@@ -541,16 +541,19 @@ canvas.sig-canvas {
           <label>Dryer Type</label>
           <select id="dryer-type">
             <option value="">-- Select --</option>
-            <option>Electric Dryer</option>
-            <option>Gas Dryer</option>
-            <option>Commercial Electric</option>
-            <option>Commercial Gas</option>
-            <option>Other</option>
+            <option>Electric</option>
+            <option>Gas</option>
+            <option>Stackable</option>
+            <option>Commercial</option>
           </select>
         </div>
         <div class="field">
-          <label>Brand / Model</label>
-          <input type="text" id="dryer-brand" placeholder="e.g. Whirlpool WED5000D">
+          <label>Dryer Make (Brand)</label>
+          <input type="text" id="dryer-make" placeholder="e.g. Samsung, LG, Whirlpool">
+        </div>
+        <div class="field">
+          <label>Dryer Model #</label>
+          <input type="text" id="dryer-model" placeholder="e.g. DVE45R6100C">
         </div>
       </div>
       <div class="field-row">
@@ -1206,7 +1209,8 @@ function saveJob(){
     jobNum:jobNum,
     serviceDate:document.getElementById('service-date')?.value||"",
     dryerType:document.getElementById('dryer-type')?.value||"",
-    dryerBrand:document.getElementById('dryer-brand')?.value||"",
+    dryerBrand:document.getElementById('dryer-make')?.value||"",
+    dryerModel:document.getElementById('dryer-model')?.value||"",
     date:new Date().toLocaleString()
   };
 

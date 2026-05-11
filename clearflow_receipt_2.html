@@ -572,9 +572,10 @@ function loadJob(){
       }
     }
   }
-  if(data.dryerBrand && document.getElementById("dryer-make")){
-    document.getElementById("dryer-make").value=data.dryerBrand;
-  }
+  const makeEl=document.getElementById("dryer-make");
+  if(makeEl) makeEl.value=data.dryerBrand||"";
+  const modelEl=document.getElementById("dryer-model");
+  if(modelEl) modelEl.value=data.dryerModel||"";
 
   /* Set receipt date to service date if available, otherwise today */
   const rcptDateEl=document.getElementById("rcpt-date");
@@ -598,7 +599,9 @@ function updateJob(){
   const jobId=getJobId();
   if(!jobId)return;
 
-  const data={
+  // Merge into existing stored data so inspection fields (dryerType, dryerBrand, dryerModel, etc.) are preserved
+  const existing=JSON.parse(localStorage.getItem(jobId)||"{}");
+  const data=Object.assign(existing,{
     id:jobId,
     firstName:document.getElementById("fname")?.value||"",
     lastName:document.getElementById("lname")?.value||"",
@@ -606,7 +609,7 @@ function updateJob(){
     email:document.getElementById("email")?.value||"",
     address:document.getElementById("address")?.value||"",
     date:new Date().toLocaleString()
-  };
+  });
 
   localStorage.setItem(jobId,JSON.stringify(data));
 }

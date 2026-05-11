@@ -484,12 +484,13 @@ function initMeta(){
   document.getElementById('rcpt-date').textContent=ds2;
   document.getElementById('c-date').textContent=ds2;
   document.getElementById('t-date').textContent=ds2;
-  // Use inspection job number as receipt number (CF-YYYY-#####)
+  // Use CF-YYYY-##### from stored job data (not the raw job_ key)
   const jobId = getJobId();
-  if(jobId){
-    document.getElementById('rcpt-num').textContent = jobId;
+  const jobData = jobId ? JSON.parse(localStorage.getItem(jobId) || '{}') : {};
+  if(jobData.jobNum){
+    document.getElementById('rcpt-num').textContent = jobData.jobNum;
   } else {
-    // Fallback if opened standalone (no job in URL)
+    // Fallback if opened standalone or jobNum missing
     const currentYear = now.getFullYear().toString();
     const stored = JSON.parse(localStorage.getItem('cf_rcpt_seq') || '{}');
     const lastYear = stored.year || '';

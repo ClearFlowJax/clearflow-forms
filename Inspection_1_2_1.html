@@ -464,6 +464,8 @@ canvas.sig-canvas {
   .calc-field { background: #e8f7f5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .sig-canvas-wrap { border: 1px solid #ccc; }
   .sig-clear, .photo-remove { display: none !important; }
+  #add-photo-btn { display: none !important; }
+  [onclick^="removeExtraSlot"] { display: none !important; }
 }
 </style>
 </head>
@@ -736,7 +738,10 @@ canvas.sig-canvas {
   <div class="card">
     <div class="card-header"><div class="bar"></div><h2>Photo Documentation</h2></div>
     <div class="card-body">
-      <div class="photo-grid">
+
+      <!-- BEFORE / AFTER (fixed) -->
+      <div style="font-family:var(--head);font-weight:800;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--navy);margin-bottom:10px;padding-bottom:5px;border-bottom:2px solid var(--border);">Before &amp; After Cleaning</div>
+      <div class="photo-grid" style="margin-bottom:18px;">
         <!-- BEFORE -->
         <div class="photo-slot">
           <label>Before Cleaning</label>
@@ -760,6 +765,35 @@ canvas.sig-canvas {
           </div>
         </div>
       </div>
+
+      <!-- ADDITIONAL PHOTOS (dynamic) -->
+      <div style="font-family:var(--head);font-weight:800;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--navy);margin-bottom:10px;padding-bottom:5px;border-bottom:2px solid var(--border);">Additional Photos</div>
+
+      <!-- Additional photo slots container -->
+      <div id="additional-photos-grid" class="photo-grid" style="margin-bottom:12px;"></div>
+
+      <!-- Add Photo button -->
+      <button id="add-photo-btn" onclick="addPhotoSlot()" style="
+        width:100%;
+        padding:13px 14px;
+        background:var(--teal-lt);
+        border:2px dashed var(--teal-md);
+        border-radius:8px;
+        font-family:var(--head);
+        font-weight:700;
+        font-size:13px;
+        letter-spacing:1px;
+        color:var(--teal);
+        text-transform:uppercase;
+        cursor:pointer;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+        transition:background 0.15s, border-color 0.15s;
+      ">
+        <span style="font-size:18px;">＋</span> Add Photo
+      </button>
     </div>
   </div>
 
@@ -922,6 +956,52 @@ function removePhoto(id) {
   input.value = '';
   if (icon) icon.style.display = '';
   if (hint) hint.style.display = '';
+}
+
+// ── ADDITIONAL PHOTO SLOTS ────────────────────────────────────
+let extraPhotoCount = 0;
+
+function addPhotoSlot() {
+  extraPhotoCount++;
+  const id = 'extra-' + extraPhotoCount;
+  const grid = document.getElementById('additional-photos-grid');
+
+  const slot = document.createElement('div');
+  slot.className = 'photo-slot';
+  slot.id = id + '-slot';
+
+  slot.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <input type="text" id="${id}-label" placeholder="Label (e.g. Vent hose, Termination...)"
+        style="flex:1;font-family:var(--head);font-weight:700;font-size:10px;letter-spacing:1px;
+        text-transform:uppercase;color:var(--navy);background:transparent;border:none;
+        border-bottom:1.5px solid var(--border);padding:2px 0;outline:none;min-height:unset;
+        border-radius:0;cursor:text;">
+      <button onclick="removeExtraSlot('${id}')" title="Remove this photo"
+        style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;
+        padding:0 0 0 8px;line-height:1;flex-shrink:0;">✕</button>
+    </div>
+    <div class="photo-upload-area" id="${id}-area">
+      <input type="file" accept="image/*" capture="environment" id="${id}-input" onchange="showPhoto(this,'${id}')">
+      <div class="photo-icon">📷</div>
+      <div class="photo-hint">Tap to take<br>or upload photo</div>
+      <img class="photo-preview" id="${id}-preview" src="" alt="Additional photo">
+      <button class="photo-remove" id="${id}-remove" onclick="removePhoto('${id}')">✕</button>
+    </div>
+  `;
+
+  grid.appendChild(slot);
+
+  // Focus the label input after a short delay so keyboard opens
+  setTimeout(() => {
+    const labelInput = document.getElementById(id + '-label');
+    if (labelInput) labelInput.focus();
+  }, 80);
+}
+
+function removeExtraSlot(id) {
+  const slot = document.getElementById(id + '-slot');
+  if (slot) slot.remove();
 }
 
 // ── SIGNATURE CANVAS ──────────────────────────────────────────
